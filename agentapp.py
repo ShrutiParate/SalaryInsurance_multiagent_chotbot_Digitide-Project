@@ -10,8 +10,16 @@ from langchain.chains import RetrievalQA
 # ------------------------
 # 1. Setup LLM with Groq
 # ------------------------
+
+# Try to read API key from Streamlit secrets first, then fall back to env variable
+groq_api_key = st.secrets.get("GROQ_API_KEY", os.environ.get("GROQ_API_KEY"))
+
+if not groq_api_key:
+    st.error("🚨 No GROQ_API_KEY found! Please set it in Streamlit secrets or as an environment variable.")
+    st.stop()
+
 llm = ChatGroq(
-    groq_api_key=os.environ.get("GROQ_API_KEY"),
+    groq_api_key=groq_api_key,
     model="llama3-8b-8192"   # free Groq model, good for QA
 )
 
@@ -73,7 +81,7 @@ st.write("Ask me about **salary** or **insurance** policies.")
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
- # Add a Clear Chat button
+# Add a Clear Chat button
 if st.button("🗑️ Clear Chat"):
     st.session_state.chat_history = []
     st.rerun()
