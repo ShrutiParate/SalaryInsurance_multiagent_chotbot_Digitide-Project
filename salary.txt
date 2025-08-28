@@ -1,0 +1,47 @@
+Salary Structure Guidelines
+
+1. Monthly Salary
+Definition: The fixed amount an employee receives every month before deductions.
+- It includes basic pay, allowances, and benefits.
+Example: If basic pay = 40,000 and allowances = 10,000, then monthly salary = 50,000.
+Another Example: A software engineer may receive 55,000 per month including HRA and transport allowance.
+
+2. Annual Salary
+Definition: The total salary earned in a year, usually excluding one-time bonuses.
+- Formula: Annual Salary = Monthly Salary × 12.
+Example: If monthly salary = 50,000, then annual salary = 600,000 (before deductions).
+Another Example: A manager earning 80,000 per month has an annual salary of 960,000.
+
+3. Deductions
+Definition: Amounts subtracted from gross salary to calculate net salary.
+- Common deductions include:
+  a. Income Tax (depends on tax slab)
+  b. Provident Fund (PF) – usually 12% of basic pay
+  c. Professional Tax – fixed small amount depending on state
+Example: If monthly salary = 60,000 and deductions = 7,000, net monthly salary = 53,000.
+Another Example: PF deduction of 4,800 (12% of 40,000 basic) reduces take-home salary.
+
+4. Bonuses
+Definition: Additional payments given by the company, usually based on performance or festive occasions.
+- Not part of fixed monthly or annual salary.
+Example: An employee may receive a 50,000 annual performance bonus.
+Another Example: A Diwali bonus of 10,000 is given as a one-time payment.
+
+5. Payslip
+Definition: Official document that summarizes an employee’s earnings and deductions for a given month.
+- Includes: gross salary, deductions, and net salary.
+Example: Payslip shows Gross = 60,000, Deductions = 7,000, Net = 53,000.
+Another Example: Payslip may also list bonus or overtime earnings separately.
+
+6. Example Calculation
+Definition: How to compute gross and net salary annually.
+Example:
+- Gross monthly salary = 60,000.
+- Deductions = 7,000.
+- Net monthly salary = 53,000.
+- Annual gross salary = 60,000 × 12 = 720,000.
+- Annual net salary = 53,000 × 12 = 636,000.
+Another Example:
+- Gross monthly = 80,000, deductions = 10,000.
+- Net monthly = 70,000.
+- Annual net salary = 840,000.
