@@ -5,7 +5,7 @@ from langchain_groq import ChatGroq
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings   # ✅ updated import
+from langchain_huggingface import HuggingFaceEmbeddings  
 from langchain.chains import RetrievalQA
 
 # ------------------------
@@ -47,7 +47,7 @@ docs = load_documents()
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 split_docs = splitter.split_documents(docs)
 
-# ✅ Use smaller embedding model for Streamlit Cloud
+# embedding model for Streamlit Cloud
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
 
 # Create vectorstore (in-memory Chroma)
