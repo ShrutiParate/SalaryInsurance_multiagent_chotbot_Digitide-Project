@@ -1,4 +1,3 @@
-
 import os
 import streamlit as st
 
@@ -6,7 +5,7 @@ import streamlit as st
 # 1. Setup LLM with Groq
 # ------------------------
 from langchain_groq import ChatGroq
-from langchain_community.vectorstores import Chroma
+from langchain.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -51,14 +50,9 @@ split_docs = splitter.split_documents(docs)
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
 
 # ------------------------
-# 3. Create vectorstore (In-memory Chroma)
+# 3. Create vectorstore (FAISS, in-memory)
 # ------------------------
-# persist_directory=None ensures Chroma runs fully in-memory, avoiding SQLite issues on Windows
-vectorstore = Chroma.from_documents(
-    split_docs,
-    embedding=embeddings,
-    persist_directory=None
-)
+vectorstore = FAISS.from_documents(split_docs, embeddings)
 
 # ------------------------
 # 4. Define Specialized Agents
