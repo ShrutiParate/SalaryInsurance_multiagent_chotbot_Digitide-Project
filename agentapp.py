@@ -1,16 +1,16 @@
 
 import os
 import streamlit as st
-from langchain_groq import ChatGroq
-from langchain_community.vectorstores import Chroma
-from langchain_community.document_loaders import TextLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings  
-from langchain.chains import RetrievalQA
 
 # ------------------------
 # 1. Setup LLM with Groq
 # ------------------------
+from langchain_groq import ChatGroq
+from langchain_community.vectorstores import Chroma
+from langchain_community.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.chains import RetrievalQA
 
 # Try Streamlit secrets (for Cloud), otherwise fallback to local env variable
 groq_api_key = None
@@ -20,12 +20,12 @@ except Exception:
     groq_api_key = os.environ.get("GROQ_API_KEY")
 
 if not groq_api_key:
-    st.error("🚨 No GROQ_API_KEY found! Please set it in Streamlit secrets (for cloud) or as an environment variable (for local).")
+    st.error("🚨 No GROQ_API_KEY found! Please set it in Streamlit secrets or as an environment variable.")
     st.stop()
 
 llm = ChatGroq(
     groq_api_key=groq_api_key,
-    model="llama3-8b-8192"   # free Groq model, good for QA
+    model="llama3-8b-8192"
 )
 
 # ------------------------
@@ -47,14 +47,21 @@ docs = load_documents()
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 split_docs = splitter.split_documents(docs)
 
-# embedding model for Streamlit Cloud
+# Use a small embedding model
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
 
-# Create vectorstore (in-memory Chroma)
-vectorstore = Chroma.from_documents(split_docs, embedding=embeddings)
+# ------------------------
+# 3. Create vectorstore (In-memory Chroma)
+# ------------------------
+# persist_directory=None ensures Chroma runs fully in-memory, avoiding SQLite issues on Windows
+vectorstore = Chroma.from_documents(
+    split_docs,
+    embedding=embeddings,
+    persist_directory=None
+)
 
 # ------------------------
-# 3. Define Specialized Agents
+# 4. Define Specialized Agents
 # ------------------------
 salary_retriever = vectorstore.as_retriever(search_kwargs={"filter": {"source": "salary.txt"}})
 insurance_retriever = vectorstore.as_retriever(search_kwargs={"filter": {"source": "insurance.txt"}})
@@ -63,10 +70,9 @@ salary_agent = RetrievalQA.from_chain_type(llm=llm, retriever=salary_retriever)
 insurance_agent = RetrievalQA.from_chain_type(llm=llm, retriever=insurance_retriever)
 
 # ------------------------
-# 4. Coordinator Logic
+# 5. Coordinator Logic
 # ------------------------
 def coordinator(query):
-    # simple keyword-based routing (can be improved)
     query_lower = query.lower()
     if "salary" in query_lower or "payslip" in query_lower or "deduction" in query_lower:
         return "Salary Agent", salary_agent.run(query)
@@ -76,7 +82,7 @@ def coordinator(query):
         return "Coordinator", "Sorry, I can only answer salary or insurance related questions."
 
 # ------------------------
-# 5. Streamlit UI
+# 6. Streamlit UI
 # ------------------------
 st.set_page_config(page_title="Multi-Agent HR Assistant", page_icon="🤖")
 
@@ -86,7 +92,7 @@ st.write("Ask me about **salary** or **insurance** policies.")
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Add a Clear Chat button
+# Clear Chat button
 if st.button("🗑️ Clear Chat"):
     st.session_state.chat_history = []
     st.rerun()
@@ -105,3 +111,4 @@ for sender, msg in st.session_state.chat_history:
         st.chat_message("user").write(msg)
     else:
         st.chat_message("assistant").write(f"**{sender}**: {msg}")
+
