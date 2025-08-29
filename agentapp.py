@@ -1,21 +1,26 @@
+
 import os
 import streamlit as st
 from langchain_groq import ChatGroq
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings   # ✅ updated import
 from langchain.chains import RetrievalQA
 
 # ------------------------
 # 1. Setup LLM with Groq
 # ------------------------
 
-# Try to read API key from Streamlit secrets first, then fall back to env variable
-groq_api_key = st.secrets.get("GROQ_API_KEY", os.environ.get("GROQ_API_KEY"))
+# Try Streamlit secrets (for Cloud), otherwise fallback to local env variable
+groq_api_key = None
+try:
+    groq_api_key = st.secrets["GROQ_API_KEY"]
+except Exception:
+    groq_api_key = os.environ.get("GROQ_API_KEY")
 
 if not groq_api_key:
-    st.error("🚨 No GROQ_API_KEY found! Please set it in Streamlit secrets or as an environment variable.")
+    st.error("🚨 No GROQ_API_KEY found! Please set it in Streamlit secrets (for cloud) or as an environment variable (for local).")
     st.stop()
 
 llm = ChatGroq(
@@ -42,8 +47,8 @@ docs = load_documents()
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 split_docs = splitter.split_documents(docs)
 
-# Create embeddings
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+# ✅ Use smaller embedding model for Streamlit Cloud
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
 
 # Create vectorstore (in-memory Chroma)
 vectorstore = Chroma.from_documents(split_docs, embedding=embeddings)
