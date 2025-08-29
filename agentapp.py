@@ -1,9 +1,6 @@
 import os
 import streamlit as st
 
-# ------------------------
-# 1. Setup LLM with Groq
-# ------------------------
 from langchain_groq import ChatGroq
 from langchain.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader
@@ -28,7 +25,7 @@ llm = ChatGroq(
 )
 
 # ------------------------
-# 2. Load and Prepare Data
+#  Load and Prepare Data
 # ------------------------
 def load_documents():
     loaders = [
@@ -50,12 +47,12 @@ split_docs = splitter.split_documents(docs)
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
 
 # ------------------------
-# 3. Create vectorstore (FAISS, in-memory)
+#  Create vectorstore 
 # ------------------------
 vectorstore = FAISS.from_documents(split_docs, embeddings)
 
 # ------------------------
-# 4. Define Specialized Agents
+#  Define Specialized Agents
 # ------------------------
 salary_retriever = vectorstore.as_retriever(search_kwargs={"filter": {"source": "salary.txt"}})
 insurance_retriever = vectorstore.as_retriever(search_kwargs={"filter": {"source": "insurance.txt"}})
@@ -64,7 +61,7 @@ salary_agent = RetrievalQA.from_chain_type(llm=llm, retriever=salary_retriever)
 insurance_agent = RetrievalQA.from_chain_type(llm=llm, retriever=insurance_retriever)
 
 # ------------------------
-# 5. Coordinator Logic
+#  Coordinator Logic
 # ------------------------
 def coordinator(query):
     query_lower = query.lower()
@@ -76,7 +73,7 @@ def coordinator(query):
         return "Coordinator", "Sorry, I can only answer salary or insurance related questions."
 
 # ------------------------
-# 6. Streamlit UI
+#  Streamlit UI
 # ------------------------
 st.set_page_config(page_title="Multi-Agent HR Assistant", page_icon="🤖")
 
