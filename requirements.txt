@@ -1,7 +1,7 @@
 streamlit
 langchain
-langchain-community
 langchain-groq
 langchain-huggingface
-chromadb
+langchain-community
 sentence-transformers
+faiss-cpu
