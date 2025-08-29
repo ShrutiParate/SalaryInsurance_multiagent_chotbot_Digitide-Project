@@ -12,7 +12,7 @@ Two specialized agents share the same vector store but handle different queries:
 ## 🚀 Features
 - Built with **Streamlit** for an interactive chat UI.  
 - Uses **LangChain** to manage retrieval and agents.  
-- Embeds HR knowledge base (`salary.txt`, `insurance.txt`) into a **Chroma vector store**.  
+- Embeds HR knowledge base (`salary.txt`, `insurance.txt`) into a **FAISS vector store**.  
 - **Coordinator logic** routes queries to the right agent.  
 - Maintains **chat history** until cleared.  
 
